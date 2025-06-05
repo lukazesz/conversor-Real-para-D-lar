@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor Dólar</title>
+    <link rel="shortcut icon" href="./assets/img/favicon-16x16.png" type="image/x-icon">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            height: 100vh;
+            background-color: #53779a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+
+        .conteiner {
+            background-color: white;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 450px;
+           
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        input {
+            padding: 10px;
+            width: calc(100% - 22px);
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .resultado {
+            margin-top: 20px;
+            padding: 12px;
+            background-color: #e9ecef;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="conteiner">
+        <h2>Conversor de Real para Dólar</h2>
+
+        <input type="number" id="input" placeholder="Digite o valor em reais">
+        <button onclick="converter()">Converter</button>
+
+        <div class="resultado" id="resultado">
+            O valor convertido aparecerá aqui.
+        </div>
+    </div>
+    <script>
+    async function converter() {
+        const valorReal = document.getElementById("input").value;
+        const resultado = document.getElementById("resultado");
+
+        if (valorReal === "" || valorReal <= 0) {
+            resultado.innerHTML = "Por favor, insira um valor válido.";
+            return;
+        }
+
+        try {
+            const response = await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRL');
+            const data = await response.json();
+            const cotacao = parseFloat(data.USDBRL.bid);
+
+            const valorConvertido = (valorReal / cotacao).toFixed(2);
+
+            resultado.innerHTML = `💵 Valor em dólar: <b>US$ ${valorConvertido}</b> <br>
+            🏦 Cotação atual: <b>R$ ${cotacao}</b>`;
+        } catch (error) {
+            resultado.innerHTML = "Erro ao buscar a cotação. Tente novamente.";
+            console.error(error);
+        }
+    }
+</script>
+
+</html>
